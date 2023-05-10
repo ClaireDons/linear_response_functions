@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def run_statstool(path, driver, file, hdf5=""):
+def run_statstool(driver, file, hdf5=""):
     """Function to run the BISICLES stats module
     and returns the output as plain text.
     path: path to driver
@@ -12,7 +12,7 @@ def run_statstool(path, driver, file, hdf5=""):
     file: plot file to be processed"""
 
     command = (
-        path + driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
+        driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
     )
     output = subprocess.check_output(command, shell=True)
     output = output.decode("utf-8")
@@ -39,7 +39,7 @@ def create_series(output, df):
     return a_series
 
 
-def stats_retrieve(path, driver, file, df, hdf5=""):
+def stats_retrieve(driver, file, df, hdf5=""):
     """Function which calls the BISICLES stats module
     and returns a pandas data series.
     path: path to driver
@@ -47,12 +47,12 @@ def stats_retrieve(path, driver, file, df, hdf5=""):
     file: plot file to be processed
     df: a dataframe with the columns for the variables defined"""
 
-    output = run_statstool(path, driver, file, hdf5)
+    output = run_statstool(driver, file, hdf5)
     a_series = create_series(output, df)
     return a_series
 
 
-def amrplot_df(path, driver, files, hdf5=""):
+def amrplot_df(driver, files, hdf5=""):
     """Function which runs the BISICLES stats module
     over multiple plot files in parallel.
     path: path to driver
@@ -72,7 +72,7 @@ def amrplot_df(path, driver, files, hdf5=""):
         ]
     )
     series_list = Parallel(n_jobs=num_jobs)(
-        delayed(stats_retrieve)(path, driver, i, df, hdf5) for i in files
+        delayed(stats_retrieve)(driver, i, df, hdf5) for i in files
     )
     df = df.append(series_list, ignore_index=True)
     df = df.sort_values(by=["time"])

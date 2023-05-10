@@ -10,34 +10,33 @@ from lrf_calc import lrf_functions as lrf
 PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/data"
 MASK_PATH = r"/nobackup/users/donnelly/levermann-masks"
 CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/lrf_csv/"
+STATS_TOOL = r"/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Linux.64.g++.gfortran.DEBUG.ex"
 
-FILETOOLS_PATH = "/usr/people/donnelly/bisicles/BISICLES/code/filetools/"
-STATS_TOOL = "stats2d.Linux.64.g++.gfortran.DEBUG.ex"
+EXPERIMENT = 8
 
-EXPERIMENT = "LRF8"
-BASAL_MELT = 8.0
+def find_name(mask, outpath, experiment):
+    """Create the name for the csv file
+    """
+    key = os.path.splitext(os.path.basename(mask))[0][14:-3]
+    name = outpath + "LRF" + str(experiment) + key + ".csv"
+    print(name)
+    return name
 
-
-def main(plot_files, masks, outpath, filetools, driver):
+def main(plot_files, masks, experiment, outpath, driver):
     """Check if csv of linear response functions exists and if not calculates it
     """
     for mask in masks:
-        key = os.path.splitext(os.path.basename(mask))[0][14:-3]
-        name = outpath + EXPERIMENT + key + ".csv"
-        print(name)
+        name = find_name(mask, outpath, experiment)
         if os.path.isfile(name) is True:
             lrf_df = pd.read_csv(name)
             if "SMA10" not in lrf_df.columns:
-                lrf_df = lrf.lrf_calc(lrf_df, BASAL_MELT)
-                lrf_df.to_csv(name, index=False)
-            elif "SMA10" in lrf_df.columns:
-                lrf_df = lrf.lrf_calc(lrf_df, BASAL_MELT)
+                lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
                 lrf_df.to_csv(name, index=False)
             else:
-                print("Something odd happened")
+                print("csv already calculated")
         else:
-            lrf_df = amrstats.amrplot_df(filetools, driver, plot_files, mask)
-            lrf_df = lrf.lrf_calc(lrf_df, BASAL_MELT)
+            lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
+            lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
             lrf_df.to_csv(name, index=False)
 
 
@@ -45,4 +44,4 @@ if __name__ == "__main__":
     files = glob(os.path.join(PATH, "plot.*"))
     mask_files = glob(os.path.join(MASK_PATH, "*.2d.hdf5"))
 
-    main(files, mask_files, CSV_PATH, FILETOOLS_PATH, STATS_TOOL)
+    main(files, mask_files, EXPERIMENT, CSV_PATH, STATS_TOOL)
