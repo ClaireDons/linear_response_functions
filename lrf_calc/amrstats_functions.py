@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def stats_run(path, driver, file, hdf5=""):
+def run_statstool(path, driver, file, hdf5=""):
     """Function to run the BISICLES stats module
     and returns the output as plain text.
     path: path to driver
@@ -19,7 +19,7 @@ def stats_run(path, driver, file, hdf5=""):
     return output
 
 
-def stats_series(output, df):
+def create_series(output, df):
     """Function to take the BISICLES stats module
     output and turn it into a pandas data series.
     statsOutput: Output from the stats command
@@ -47,8 +47,8 @@ def stats_retrieve(path, driver, file, df, hdf5=""):
     file: plot file to be processed
     df: a dataframe with the columns for the variables defined"""
 
-    output = stats_run(path, driver, file, hdf5)
-    a_series = stats_series(output, df)
+    output = run_statstool(path, driver, file, hdf5)
+    a_series = create_series(output, df)
     return a_series
 
 
