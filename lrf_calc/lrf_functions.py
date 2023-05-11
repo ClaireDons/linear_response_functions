@@ -1,4 +1,6 @@
-import pandas as pd
+"""Functions for calculating Linear response function
+based on statistics dataframe and plotting a timeseries.
+"""
 import matplotlib.pyplot as plt
 
 

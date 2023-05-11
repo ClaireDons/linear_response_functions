@@ -1,7 +1,11 @@
+"""Module for functions that run stats tool from BISICLES and 
+creating a pandas dataframe
+"""
+
 import subprocess
+import multiprocessing
 import pandas as pd
 from joblib import Parallel, delayed
-import multiprocessing
 
 
 def run_statstool(driver, file, hdf5=""):
@@ -19,7 +23,7 @@ def run_statstool(driver, file, hdf5=""):
     return output
 
 
-def create_series(output, df):
+def create_series(output, stats_df):
     """Function to take the BISICLES stats module
     output and turn it into a pandas data series.
     statsOutput: Output from the stats command
@@ -35,11 +39,11 @@ def create_series(output, df):
         float(stats[17]),
         float(stats[20]),
     ]
-    a_series = pd.Series(data, index=df.columns)
+    a_series = pd.Series(data, index=stats_df.columns)
     return a_series
 
 
-def stats_retrieve(driver, file, df, hdf5=""):
+def stats_retrieve(driver, file, stats_df, hdf5=""):
     """Function which calls the BISICLES stats module
     and returns a pandas data series.
     path: path to driver
@@ -48,7 +52,7 @@ def stats_retrieve(driver, file, df, hdf5=""):
     df: a dataframe with the columns for the variables defined"""
 
     output = run_statstool(driver, file, hdf5)
-    a_series = create_series(output, df)
+    a_series = create_series(output, stats_df)
     return a_series
 
 
@@ -60,7 +64,7 @@ def amrplot_df(driver, files, hdf5=""):
     files: plot files to be processed"""
 
     num_jobs = multiprocessing.cpu_count()
-    df = pd.DataFrame(
+    stats_df = pd.DataFrame(
         columns=[
             "time",
             "volumeAll",
@@ -72,9 +76,9 @@ def amrplot_df(driver, files, hdf5=""):
         ]
     )
     series_list = Parallel(n_jobs=num_jobs)(
-        delayed(stats_retrieve)(driver, i, df, hdf5) for i in files
+        delayed(stats_retrieve)(driver, i, stats_df, hdf5) for i in files
     )
-    df = df.append(series_list, ignore_index=True)
-    df = df.sort_values(by=["time"])
-    df = df.reset_index(drop=True)
-    return df
+    stats_df = stats_df.append(series_list, ignore_index=True)
+    stats_df = stats_df.sort_values(by=["time"])
+    stats_df = stats_df.reset_index(drop=True)
+    return stats_df
