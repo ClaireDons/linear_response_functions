@@ -18,9 +18,7 @@ def run_statstool(driver, file, hdf5=""):
     Returns plain text output summarising statistics
     """
 
-    command = (
-        driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
-    )
+    command = driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
     output = subprocess.check_output(command, shell=True)
     output = output.decode("utf-8")
     return output
