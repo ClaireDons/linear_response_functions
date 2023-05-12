@@ -7,8 +7,11 @@ import matplotlib.pyplot as plt
 def lrf_calc(df, bm):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
-    df: dataframe containing BISICLES data
-    returns dataframe with additional columns"""
+    Args:
+        df (dataframe): dataframe containing summary statistics
+        bm (float): basal melt anomaly
+    Returns dataframe with additional columns for LRF and running mean
+    """
 
     sea_area = 361.8
     rho_i = 0.917
@@ -24,8 +27,12 @@ def lrf_calc(df, bm):
 
 def lrf_ts(df, key, plot_path):
     """Function to plot LRF from Levermann et al. (2020) based on
-    dataframe created in LRF_calc. Returns a plot with LRF and
-    10 year running mean"""
+    dataframe created in LRF_calc.
+    Args:
+        df: df (dataframe): dataframe containing summary statistics
+        key (str): name of region
+        plot_path (str): path to where plots are saved
+    Returns a plot with LRF and 10 year running mean"""
 
     plot = plt.plot(df["time"], df["LRF"])
     plt.plot(df["time"], df["SMA10"])

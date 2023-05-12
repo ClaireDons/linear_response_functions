@@ -16,6 +16,11 @@ EXPERIMENT = 8
 
 def find_name(mask, outpath, experiment):
     """Create the name for the csv file
+    Args:
+        mask (str): name of mask of antarctica region
+        outpath (str): path to where csv will be output
+        experiment (int): integer by which basal melt was increased by
+    Returns name of csv file that will be created 
     """
     key = os.path.splitext(os.path.basename(mask))[0][14:-3]
     name = outpath + "LRF" + str(experiment) + key + ".csv"
@@ -24,6 +29,13 @@ def find_name(mask, outpath, experiment):
 
 def main(plot_files, masks, experiment, outpath, driver):
     """Check if csv of linear response functions exists and if not calculates it
+    Args:
+        plot_files (list): list of BISICLES plot files
+        masks (list): list of Antarctica mask files
+        experiment (int): number by which basal melt was increased by
+        outpath (str): path to where csv will be output
+        driver (str): BISICLES stats tool path and name
+    returns csv files containing statistics of plot files
     """
     for mask in masks:
         name = find_name(mask, outpath, experiment)

@@ -11,9 +11,12 @@ from joblib import Parallel, delayed
 def run_statstool(driver, file, hdf5=""):
     """Function to run the BISICLES stats module
     and returns the output as plain text.
-    path: path to driver
-    driver: driver name
-    file: plot file to be processed"""
+    Args:
+        driver (str): path to stats tool driver
+        file (str): plot file to be processed
+        hdf5 (int): which amr level should be processed
+    Returns plain text output summarising statistics
+    """
 
     command = (
         driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
@@ -26,8 +29,11 @@ def run_statstool(driver, file, hdf5=""):
 def create_series(output, stats_df):
     """Function to take the BISICLES stats module
     output and turn it into a pandas data series.
-    statsOutput: Output from the stats command
-    df: a dataframe with the columns for the variables defined"""
+    Args:
+        output (str): Output from the stats command
+        stats_df (dataframe): name of df to output to
+    Returns pandas series containing statistics
+    """
 
     stats = output.split()
     data = [
@@ -46,10 +52,13 @@ def create_series(output, stats_df):
 def stats_retrieve(driver, file, stats_df, hdf5=""):
     """Function which calls the BISICLES stats module
     and returns a pandas data series.
-    path: path to driver
-    driver: driver name
-    file: plot file to be processed
-    df: a dataframe with the columns for the variables defined"""
+    Args:
+        driver (str): path to stats tool driver
+        file (str): plot file to be processed
+        stats_df (str): a dataframe with the columns for the variables defined
+        hdf5 (int): which amr level should be processed
+    Returns pandas series containing statistics
+    """
 
     output = run_statstool(driver, file, hdf5)
     a_series = create_series(output, stats_df)
@@ -59,9 +68,13 @@ def stats_retrieve(driver, file, stats_df, hdf5=""):
 def amrplot_df(driver, files, hdf5=""):
     """Function which runs the BISICLES stats module
     over multiple plot files in parallel.
-    path: path to driver
-    driver: driver name
-    files: plot files to be processed"""
+    Args:
+        driver (str): path to stats tool driver
+        files (list): lis of plot files to be processed
+        hdf5 (int): which amr level should be processed
+    Returns pandas dataframe containing summary statistics
+    for each plot file in files
+    """
 
     num_jobs = multiprocessing.cpu_count()
     stats_df = pd.DataFrame(
