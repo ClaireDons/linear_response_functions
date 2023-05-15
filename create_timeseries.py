@@ -1,4 +1,4 @@
-"""Module to calculate the Linear Response Function for BISICLES
+"""Module to create a timeseries based on linear response function csv files
 """
 
 import os
@@ -8,6 +8,7 @@ from lrf_calc import lrf_functions as lrf
 
 
 CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
+PLOT_PATH= r"/nobackup/users/donnelly/projects/LinearResponseFunctions/plots/"
 
 def find_name(csv):
     """Extract region name for plot title
@@ -21,6 +22,12 @@ def find_name(csv):
     return name
 
 def main(files, outpath):
+    """Function which opens the csv files and plots a the LRF timeseries.
+    Args:
+        files (list): files for which a timeseries needs to be plotted
+        outpath (str): path to where the plots should be stored
+    Returns plots of LRF timeseries in .png format. 
+    """
     for file in files:
         name = find_name(file)
         lrf_df = pd.read_csv(file)
@@ -29,4 +36,4 @@ def main(files, outpath):
 if __name__ == "__main__":
     files = glob(os.path.join(CSV_PATH, "*.csv"))
 
-    main(files, CSV_PATH)
+    main(files, PLOT_PATH)
