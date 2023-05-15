@@ -13,10 +13,11 @@ def sle_calc(vol_above):
     sea_area = 361.8
     rho_i = 0.917
 
-    ice_mass = vol_above/(10**9) * rho_i
+    ice_mass = vol_above / (10**9) * rho_i
     sle = ice_mass * (1 / sea_area)
     print(sle)
     return sle
+
 
 def lrf_calc(sle, bm):
     """Function to calculate a Linear Response Function from
@@ -31,6 +32,7 @@ def lrf_calc(sle, bm):
     lrf = difference / bm
     return lrf
 
+
 def add_lrf(df, bm):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
@@ -40,7 +42,7 @@ def add_lrf(df, bm):
     Returns dataframe with additional columns for LRF and running mean
     """
 
-    df['SLE'] = sle_calc(df["volumeAbove"])
+    df["SLE"] = sle_calc(df["volumeAbove"])
     df["LRF"] = lrf_calc(df["SLE"], bm)
     df["rollmean"] = df.LRF.rolling(10).mean()
 
