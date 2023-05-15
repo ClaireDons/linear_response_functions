@@ -44,14 +44,14 @@ def main(plot_files, masks, experiment, outpath, driver):
         csv_name = find_name(mask, outpath, experiment)
         if os.path.isfile(csv_name) is True:
             lrf_df = pd.read_csv(csv_name)
-            if "SMA10" not in lrf_df.columns:
-                lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
+            if "rollmean" not in lrf_df.columns:
+                lrf_df = lrf.add_lrf(lrf_df, float(experiment))
                 lrf_df.to_csv(csv_name, index=False)
             else:
                 print("csv already calculated")
         else:
             lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
-            lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
+            lrf_df = lrf.add_lrf(lrf_df, float(experiment))
             lrf_df.to_csv(csv_name, index=False)
 
 if __name__ == "__main__":

@@ -4,7 +4,34 @@ based on statistics dataframe and plotting a timeseries.
 import matplotlib.pyplot as plt
 
 
-def lrf_calc(df, bm):
+def sle_calc(vol_above):
+    """Function to calculate sea level equivalent based on stats output from BISICLES
+    Args:
+        vol_above (pd Series): Dataframe column of volume above flotation
+    Returns pandas series containing sea level equivalent values
+    """
+    sea_area = 361.8
+    rho_i = 0.917
+
+    ice_mass = vol_above/(10**9) * rho_i
+    sle = ice_mass * (1 / sea_area)
+    print(sle)
+    return sle
+
+def lrf_calc(sle, bm):
+    """Function to calculate a Linear Response Function from
+    Levermann et al. (2020) based on stats output from BISICLES
+    Args:
+        sle (pd Series): dataframe containing summary statistics
+        bm (float): basal melt anomaly
+    Returns pandas series with LRF values
+    """
+    slem = -(sle) / 1000
+    difference = slem.diff()
+    lrf = difference / bm
+    return lrf
+
+def add_lrf(df, bm):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
     Args:
@@ -13,15 +40,10 @@ def lrf_calc(df, bm):
     Returns dataframe with additional columns for LRF and running mean
     """
 
-    sea_area = 361.8
-    rho_i = 0.917
+    df['SLE'] = sle_calc(df["volumeAbove"])
+    df["LRF"] = lrf_calc(df["SLE"], bm)
+    df["rollmean"] = df.LRF.rolling(10).mean()
 
-    df["ice_mass"] = (df.volumeAbove / (10**9)) * rho_i
-    df["SLE"] = df.ice_mass * (1 / sea_area)
-    df["SLEm"] = -(df.SLE) / 1000
-    df["difference"] = df.SLEm.diff()
-    df["LRF"] = df.difference / bm
-    df["SMA10"] = df.LRF.rolling(10).mean()
     return df
 
 
@@ -35,10 +57,9 @@ def lrf_ts(df, key, plot_path):
     Returns a plot with LRF and 10 year running mean"""
 
     plot = plt.plot(df["time"], df["LRF"])
-    plt.plot(df["time"], df["SMA10"])
+    plt.plot(df["time"], df["rollmean"])
     plt.xlabel("Time (years)")
     plt.title(key)
-    plt.show()
     plt.savefig(plot_path + key + ".png")
     plt.clf()
     return plot
