@@ -14,18 +14,20 @@ STATS_TOOL = r"/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Lin
 
 EXPERIMENT = 8
 
+
 def find_name(mask, outpath, experiment):
     """Create the name for the csv file
     Args:
         mask (str): name of mask of antarctica region
         outpath (str): path to where csv will be output
         experiment (int): integer by which basal melt was increased by
-    Returns name of csv file that will be created 
+    Returns name of csv file that will be created
     """
     key = os.path.splitext(os.path.basename(mask))[0][14:-3]
     name = outpath + "LRF" + str(experiment) + key + ".csv"
     print(name)
     return name
+
 
 def main(plot_files, masks, experiment, outpath, driver):
     """Check if csv of linear response functions exists and if not calculates it

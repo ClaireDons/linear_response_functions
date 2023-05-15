@@ -264,7 +264,7 @@ po/*~
 *.nc
 *.hdf5
 *.h5
-*.csv
+#*.csv
 
 # Ignore pictures
 *.png
@@ -274,5 +274,3 @@ po/*~
 .obsidian
 
 # other
-lrf_csv/
-data/
