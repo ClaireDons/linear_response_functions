@@ -23,10 +23,11 @@ def find_name(mask, outpath, experiment):
         experiment (int): integer by which basal melt was increased by
     Returns name of csv file that will be created
     """
-    key = os.path.splitext(os.path.basename(mask))[0][14:-3]
-    name = outpath + "LRF" + str(experiment) + key + ".csv"
+    key = os.path.splitext(os.path.basename(mask))[0][9:-5]
+    name =  "LRF" + str(experiment) + key
+    csv_name = outpath + name + ".csv"
     print(name)
-    return name
+    return name, csv_name
 
 
 def main(plot_files, masks, experiment, outpath, driver):
@@ -40,20 +41,20 @@ def main(plot_files, masks, experiment, outpath, driver):
     returns csv files containing statistics of plot files
     """
     for mask in masks:
-        name = find_name(mask, outpath, experiment)
+        name, csv_name = find_name(mask, outpath, experiment)
         if os.path.isfile(name) is True:
-            lrf_df = pd.read_csv(name)
+            lrf_df = pd.read_csv(csv_name)
             if "SMA10" not in lrf_df.columns:
                 lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
-                lrf_df.to_csv(name, index=False)
-                lrf.lrf_ts(lrf_df, LRF + str(experiment), outpath)
+                lrf_df.to_csv(csv_name, index=False)
+                lrf.lrf_ts(lrf_df, name, outpath)
             else:
                 print("csv already calculated")
         else:
             lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
             lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
-            lrf_df.to_csv(name, index=False)
-            lrf.lrf_ts(lrf_df, "LRF" + str(experiment), outpath)
+            lrf_df.to_csv(csv_name, index=False)
+            lrf.lrf_ts(lrf_df, name, outpath)
 
 
 if __name__ == "__main__":
