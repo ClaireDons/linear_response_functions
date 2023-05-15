@@ -12,7 +12,7 @@ This project takes a directory of BISICLES plot files for a LRF simulation run. 
 ## Usage
 ### Running the project
 
-To run the project, you should only need to edit the `calculate_lrf.py` file. Change the paths at the top to correspond to yours and change the `EXPERIMENT` variable to the amount of addition basal melt for that simulation. The inputs required are:
+To calculate the LRFs you run the `calculate_lrf.py` file. Change the paths at the top to correspond to yours and change the `EXPERIMENT` variable to the amount of addition basal melt for that simulation. The inputs required are:
 
 * `PATH` to input data directory with plot files
 * `MASK_PATH` to directory with Antarctica region masks
@@ -21,3 +21,4 @@ To run the project, you should only need to edit the `calculate_lrf.py` file. Ch
 * `EXPERIMENT` number by which basal melt was increased for the run
 
 If you do not have Antarctica region masks, you can create some from the `BISICLES/applications/bedmachine/maskeMasksfromVel` directory. 
+Additionally, if you want to create a time series with a rolling 10-year mean, you can run `create_timeseries.py`, here only the path to the csv directory and an plot output directory are needed. 
