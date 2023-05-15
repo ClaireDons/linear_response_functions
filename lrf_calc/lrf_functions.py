@@ -39,6 +39,6 @@ def lrf_ts(df, key, plot_path):
     plt.xlabel("Time (years)")
     plt.title(key)
     plt.show()
-    plt.savefig(plot_path + key + ".jpg")
+    plt.savefig(plot_path + key + ".png")
     plt.clf()
     return plot

@@ -9,7 +9,7 @@ from lrf_calc import lrf_functions as lrf
 
 PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/data"
 MASK_PATH = r"/nobackup/users/donnelly/levermann-masks"
-CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/lrf_csv/"
+CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
 STATS_TOOL = r"/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Linux.64.g++.gfortran.DEBUG.ex"
 
 EXPERIMENT = 8
@@ -46,12 +46,14 @@ def main(plot_files, masks, experiment, outpath, driver):
             if "SMA10" not in lrf_df.columns:
                 lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
                 lrf_df.to_csv(name, index=False)
+                lrf.lrf_ts(lrf_df, LRF + str(experiment), outpath)
             else:
                 print("csv already calculated")
         else:
             lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
             lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
             lrf_df.to_csv(name, index=False)
+            lrf.lrf_ts(lrf_df, "LRF" + str(experiment), outpath)
 
 
 if __name__ == "__main__":
