@@ -27,7 +27,7 @@ def find_name(mask, outpath, experiment):
     name =  "LRF" + str(experiment) + key
     csv_name = outpath + name + ".csv"
     print(name)
-    return name, csv_name
+    return csv_name
 
 
 def main(plot_files, masks, experiment, outpath, driver):
@@ -41,21 +41,18 @@ def main(plot_files, masks, experiment, outpath, driver):
     returns csv files containing statistics of plot files
     """
     for mask in masks:
-        name, csv_name = find_name(mask, outpath, experiment)
-        if os.path.isfile(name) is True:
+        csv_name = find_name(mask, outpath, experiment)
+        if os.path.isfile(csv_name) is True:
             lrf_df = pd.read_csv(csv_name)
             if "SMA10" not in lrf_df.columns:
                 lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
                 lrf_df.to_csv(csv_name, index=False)
-                lrf.lrf_ts(lrf_df, name, outpath)
             else:
                 print("csv already calculated")
         else:
             lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
             lrf_df = lrf.lrf_calc(lrf_df, float(experiment))
             lrf_df.to_csv(csv_name, index=False)
-            lrf.lrf_ts(lrf_df, name, outpath)
-
 
 if __name__ == "__main__":
     files = glob(os.path.join(PATH, "plot.*"))
