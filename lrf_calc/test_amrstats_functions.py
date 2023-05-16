@@ -58,5 +58,14 @@ def test_stats_retrieve(test_df):
     pd.testing.assert_series_equal(test, expected, check_dtype=False)
 
 
-# def test_amrplot_df():
-#    from lrf_calc.amrstats_functions import amrplot_df
+def test_amrplot_df(test_df):
+    from lrf_calc.amrstats_functions import amrplot_df
+
+    test_driver = "./mock_driver.sh"
+    test_files = ["file1, file2"]
+    test = amrplot_df(test_driver, test_files)
+
+    data = [[1, 2, 3, 4, 5, 6, 7]]
+    expected = pd.DataFrame(data, columns=test_df.columns)
+
+    pd.testing.assert_frame_equal(test, expected, check_dtype=False)

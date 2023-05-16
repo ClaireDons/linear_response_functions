@@ -94,4 +94,5 @@ def amrplot_df(driver, files, hdf5=""):
     stats_df = stats_df.append(series_list, ignore_index=True)
     stats_df = stats_df.sort_values(by=["time"])
     stats_df = stats_df.reset_index(drop=True)
+    print(stats_df)
     return stats_df
