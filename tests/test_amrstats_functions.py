@@ -27,7 +27,7 @@ def test_run_statstool():
     """
     from lrf_calc.amrstats_functions import run_statstool
 
-    test_driver = "./mock_driver.sh"
+    test_driver = "./tests/mock_driver.sh"
     output = run_statstool(test_driver, "file")
     test_output = str(output)
     expected_output = "time = 1 iceVolumeAll = 2  iceVolumeAbove = 3  groundedArea = 4  floatingArea = 5  totalArea = 6  groundedPlusOpenLandArea = 7  iceMassAll = 8  iceMassAbove = 9  sector = 10\n"
@@ -50,7 +50,7 @@ def test_stats_retrieve(test_df):
     """Test that calling driver to series creation works"""
     from lrf_calc.amrstats_functions import stats_retrieve
 
-    test_driver = "./mock_driver.sh"
+    test_driver = "./tests/mock_driver.sh"
     data = [1, 2, 3, 4, 5, 6, 7]
     expected = pd.Series(data, index=test_df.columns)
 
@@ -61,11 +61,11 @@ def test_stats_retrieve(test_df):
 def test_amrplot_df(test_df):
     from lrf_calc.amrstats_functions import amrplot_df
 
-    test_driver = "./mock_driver.sh"
-    test_files = ["file1, file2"]
+    test_driver = "./tests/mock_driver.sh"
+    test_files = ["file1", "file2"]
     test = amrplot_df(test_driver, test_files)
 
-    data = [[1, 2, 3, 4, 5, 6, 7]]
+    data = [[1, 2, 3, 4, 5, 6, 7],[1, 2, 3, 4, 5, 6, 7]]
     expected = pd.DataFrame(data, columns=test_df.columns)
 
     pd.testing.assert_frame_equal(test, expected, check_dtype=False)
