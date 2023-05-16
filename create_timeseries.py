@@ -8,7 +8,8 @@ from lrf_calc import lrf_functions as lrf
 
 
 CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
-PLOT_PATH= r"/nobackup/users/donnelly/projects/LinearResponseFunctions/plots/"
+PLOT_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/plots/"
+
 
 def find_name(csv):
     """Extract region name for plot title
@@ -21,19 +22,21 @@ def find_name(csv):
     print(name)
     return name
 
+
 def main(files, outpath):
     """Function which opens the csv files and plots a the LRF timeseries.
     Args:
         files (list): files for which a timeseries needs to be plotted
         outpath (str): path to where the plots should be stored
-    Returns plots of LRF timeseries in .png format. 
+    Returns plots of LRF timeseries in .png format.
     """
     for file in files:
         name = find_name(file)
         lrf_df = pd.read_csv(file)
         lrf.lrf_ts(lrf_df, name, outpath)
 
-if __name__ == "__main__":
-    files = glob(os.path.join(CSV_PATH, "*.csv"))
 
-    main(files, PLOT_PATH)
+if __name__ == "__main__":
+    plot_files = glob(os.path.join(CSV_PATH, "*.csv"))
+
+    main(plot_files, PLOT_PATH)

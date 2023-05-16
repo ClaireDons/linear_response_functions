@@ -19,47 +19,47 @@ def sle_calc(vol_above):
     return sle
 
 
-def lrf_calc(sle, bm):
+def lrf_calc(sle, basal_melt):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
     Args:
         sle (pd Series): dataframe containing summary statistics
-        bm (float): basal melt anomaly
+        basal_melt (float): basal melt anomaly
     Returns pandas series with LRF values
     """
     slem = -(sle) / 1000
     difference = slem.diff()
-    lrf = difference / bm
+    lrf = difference / basal_melt
     return lrf
 
 
-def add_lrf(df, bm):
+def add_lrf(lrf_df, basal_melt):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
     Args:
-        df (dataframe): dataframe containing summary statistics
-        bm (float): basal melt anomaly
+        lrf_df (dataframe): dataframe containing summary statistics
+        basal_melt (float): basal melt anomaly
     Returns dataframe with additional columns for LRF and running mean
     """
 
-    df["SLE"] = sle_calc(df["volumeAbove"])
-    df["LRF"] = lrf_calc(df["SLE"], bm)
-    df["rollmean"] = df.LRF.rolling(10).mean()
+    lrf_df["SLE"] = sle_calc(lrf_df["volumeAbove"])
+    lrf_df["LRF"] = lrf_calc(lrf_df["SLE"], basal_melt)
+    lrf_df["rollmean"] = lrf_df.LRF.rolling(10).mean()
 
-    return df
+    return lrf_df
 
 
-def lrf_ts(df, key, plot_path):
+def lrf_ts(lrf_df, key, plot_path):
     """Function to plot LRF from Levermann et al. (2020) based on
     dataframe created in LRF_calc.
     Args:
-        df: df (dataframe): dataframe containing summary statistics
+        lrf_df (dataframe): dataframe containing summary statistics
         key (str): name of region
         plot_path (str): path to where plots are saved
     Returns a plot with LRF and 10 year running mean"""
 
-    plot = plt.plot(df["time"], df["LRF"])
-    plt.plot(df["time"], df["rollmean"])
+    plot = plt.plot(lrf_df["time"], lrf_df["LRF"])
+    plt.plot(lrf_df["time"], lrf_df["rollmean"])
     plt.xlabel("Time (years)")
     plt.title(key)
     plt.savefig(plot_path + key + ".png")

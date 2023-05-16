@@ -7,10 +7,10 @@ import pandas as pd
 from lrf_calc import amrstats_functions as amrstats
 from lrf_calc import lrf_functions as lrf
 
-PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/data"
-MASK_PATH = r"/nobackup/users/donnelly/levermann-masks"
-CSV_PATH = r"/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
-STATS_TOOL = r"/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Linux.64.g++.gfortran.DEBUG.ex"
+PATH = "/nobackup/users/donnelly/projects/LinearResponseFunctions/data"
+MASK_PATH = "/nobackup/users/donnelly/levermann-masks"
+CSV_PATH = "/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
+STATS_TOOL = "/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Linux.64.g++.gfortran.DEBUG.ex"
 
 EXPERIMENT = 8
 
@@ -24,7 +24,7 @@ def find_name(mask, outpath, experiment):
     Returns name of csv file that will be created
     """
     key = os.path.splitext(os.path.basename(mask))[0][9:-5]
-    name =  "LRF" + str(experiment) + key
+    name = "LRF" + str(experiment) + key
     csv_name = outpath + name + ".csv"
     print(name)
     return csv_name
@@ -53,6 +53,7 @@ def main(plot_files, masks, experiment, outpath, driver):
             lrf_df = amrstats.amrplot_df(driver, plot_files, mask)
             lrf_df = lrf.add_lrf(lrf_df, float(experiment))
             lrf_df.to_csv(csv_name, index=False)
+
 
 if __name__ == "__main__":
     files = glob(os.path.join(PATH, "plot.*"))

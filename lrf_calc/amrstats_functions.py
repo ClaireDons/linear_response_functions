@@ -18,9 +18,7 @@ def run_statstool(driver, file, hdf5=""):
     Returns plain text output summarising statistics
     """
 
-    command = (
-        driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
-    )
+    command = driver + " " + file + " 918 1028 9.81 " + hdf5 + " | grep time"
     output = subprocess.check_output(command, shell=True)
     output = output.decode("utf-8")
     return output
@@ -91,8 +89,8 @@ def amrplot_df(driver, files, hdf5=""):
     series_list = Parallel(n_jobs=num_jobs)(
         delayed(stats_retrieve)(driver, i, stats_df, hdf5) for i in files
     )
-    stats_df = stats_df.append(series_list, ignore_index=True)
+
+    stats_df = pd.concat([stats_df, pd.DataFrame(series_list)], ignore_index=True)
     stats_df = stats_df.sort_values(by=["time"])
     stats_df = stats_df.reset_index(drop=True)
-    print(stats_df)
     return stats_df

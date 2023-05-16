@@ -2,12 +2,13 @@
 
 import pytest
 import pandas as pd
+from lrf_calc.amrstats_functions import run_statstool, create_series, stats_retrieve, amrplot_df
 
 
 @pytest.fixture
 def test_df():
     """Create test dataframe"""
-    test_df = pd.DataFrame(
+    ex_df = pd.DataFrame(
         columns=[
             "time",
             "volumeAll",
@@ -18,14 +19,13 @@ def test_df():
             "groundedPlusLand",
         ]
     )
-    return test_df
+    return ex_df
 
 
 def test_run_statstool():
-    """Test that subprocess calls driver and greps time, 
+    """Test that subprocess calls driver and greps time,
     and stores output correctly
     """
-    from lrf_calc.amrstats_functions import run_statstool
 
     test_driver = "./tests/mock_driver.sh"
     output = run_statstool(test_driver, "file")
@@ -36,7 +36,6 @@ def test_run_statstool():
 
 def test_create_series(test_df):
     """Test pandas Series creation based on string output"""
-    from lrf_calc.amrstats_functions import create_series
 
     test_output = "time = 1 iceVolumeAll = 2  iceVolumeAbove = 3  groundedArea = 4  floatingArea = 5  totalArea = 6  groundedPlusOpenLandArea = 7  iceMassAll = 8  iceMassAbove = 9  sector = 10\n"
     data = [1, 2, 3, 4, 5, 6, 7]
@@ -48,7 +47,6 @@ def test_create_series(test_df):
 
 def test_stats_retrieve(test_df):
     """Test that calling driver to series creation works"""
-    from lrf_calc.amrstats_functions import stats_retrieve
 
     test_driver = "./tests/mock_driver.sh"
     data = [1, 2, 3, 4, 5, 6, 7]
@@ -59,13 +57,13 @@ def test_stats_retrieve(test_df):
 
 
 def test_amrplot_df(test_df):
-    from lrf_calc.amrstats_functions import amrplot_df
+    """Test for creating dataframe from files list"""
 
     test_driver = "./tests/mock_driver.sh"
     test_files = ["file1", "file2"]
     test = amrplot_df(test_driver, test_files)
 
-    data = [[1, 2, 3, 4, 5, 6, 7],[1, 2, 3, 4, 5, 6, 7]]
+    data = [[1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5, 6, 7]]
     expected = pd.DataFrame(data, columns=test_df.columns)
 
     pd.testing.assert_frame_equal(test, expected, check_dtype=False)
