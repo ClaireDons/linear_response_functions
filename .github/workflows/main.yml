@@ -34,4 +34,4 @@ jobs:
 
     - name: Test with PyTest
       run: |
-        python -m pytest tests/test_lrf_function.py
+        python -m pytest tests/test_lrf_functions.py
