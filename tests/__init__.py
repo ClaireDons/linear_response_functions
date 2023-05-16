@@ -1,1 +1,0 @@
-"""Testing suite for lrf_calc package"""
