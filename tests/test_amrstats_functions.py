@@ -2,7 +2,12 @@
 
 import pytest
 import pandas as pd
-from lrf_calc.amrstats_functions import run_statstool, create_series, stats_retrieve, amrplot_df
+from lrf_calc.amrstats_functions import (
+    run_statstool,
+    create_series,
+    stats_retrieve,
+    amrplot_df,
+)
 
 
 @pytest.fixture
