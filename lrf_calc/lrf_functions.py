@@ -15,7 +15,6 @@ def sle_calc(vol_above):
 
     ice_mass = vol_above / (10**9) * rho_i
     sle = ice_mass * (1 / sea_area)
-    print(sle)
     return sle
 
 
