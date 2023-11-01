@@ -37,6 +37,6 @@ def main(files, outpath):
 
 
 if __name__ == "__main__":
-    plot_files = glob(os.path.join(CSV_PATH, "*.csv"))
+    plot_files = glob(os.path.join(CSV_PATH, "total_*"))
 
     main(plot_files, PLOT_PATH)

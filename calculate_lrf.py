@@ -7,7 +7,7 @@ import pandas as pd
 from lrf_calc import amrstats_functions as amrstats
 from lrf_calc import lrf_functions as lrf
 
-PATH = "/nobackup/users/donnelly/projects/LinearResponseFunctions/data"
+PATH = "/nobackup/users/donnelly/Antarctica/LRF8"
 MASK_PATH = "/nobackup/users/donnelly/levermann-masks"
 CSV_PATH = "/nobackup/users/donnelly/projects/LinearResponseFunctions/csv/"
 STATS_TOOL = "/usr/people/donnelly/bisicles/BISICLES/code/filetools/stats2d.Linux.64.g++.gfortran.DEBUG.ex"
@@ -24,7 +24,7 @@ def find_name(mask, outpath, experiment):
     Returns name of csv file that will be created
     """
     key = os.path.splitext(os.path.basename(mask))[0][9:-5]
-    name = "LRF" + str(experiment) + key
+    name = "total_lrf8" + key
     csv_name = outpath + name + ".csv"
     print(name)
     return csv_name
@@ -56,7 +56,7 @@ def main(plot_files, masks, experiment, outpath, driver):
 
 
 if __name__ == "__main__":
-    files = glob(os.path.join(PATH, "plot.*"))
+    files = glob(os.path.join(PATH, "plot.*.2d.hdf5"))
     mask_files = glob(os.path.join(MASK_PATH, "*.2d.hdf5"))
 
     main(files, mask_files, EXPERIMENT, CSV_PATH, STATS_TOOL)

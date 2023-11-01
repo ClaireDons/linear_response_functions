@@ -18,6 +18,21 @@ def sle_calc(vol_above):
     return sle
 
 
+def tot_lrf_calc(total_volume, basal_melt):
+    """Function to calculate sea level equivalent based on stats output from BISICLES
+    Args:
+        vol_above (pd Series): Dataframe column of volume above flotation
+    Returns pandas series containing sea level equivalent values
+    """
+    rho_i = 0.917
+
+    ice_mass = -total_volume / (10**9) * rho_i
+    diff_mass = ice_mass.diff()
+    lrf = diff_mass / basal_melt
+    return lrf
+
+
+
 def lrf_calc(sle, basal_melt):
     """Function to calculate a Linear Response Function from
     Levermann et al. (2020) based on stats output from BISICLES
@@ -42,8 +57,14 @@ def add_lrf(lrf_df, basal_melt):
     """
 
     lrf_df["SLE"] = sle_calc(lrf_df["volumeAbove"])
+    sle = - lrf_df.SLE
+    #totsle = tot_sle_calc(lrf_df["volumeAll"])
+    lrf_df["diffsle"] = sle.diff(1)
+    lrf_df["cumsle"] = lrf_df.diffsle.cumsum()
     lrf_df["LRF"] = lrf_calc(lrf_df["SLE"], basal_melt)
     lrf_df["rollmean"] = lrf_df.LRF.rolling(10).mean()
+    lrf_df["totLRF"] = tot_lrf_calc(lrf_df["volumeAll"], basal_melt)
+    lrf_df["tot_rollmean"] = lrf_df.totLRF.rolling(10).mean()
 
     return lrf_df
 
@@ -60,7 +81,8 @@ def lrf_ts(lrf_df, key, plot_path):
     plot = plt.plot(lrf_df["time"], lrf_df["LRF"])
     plt.plot(lrf_df["time"], lrf_df["rollmean"])
     plt.xlabel("Time (years)")
-    plt.title(key)
+    plt.ylabel("LRF")
+    #plt.title(key)
     plt.savefig(plot_path + key + ".png")
     plt.clf()
     return plot
